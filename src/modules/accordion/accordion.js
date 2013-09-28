@@ -1,15 +1,41 @@
 angular.module('ui.semantic.accordion', [])
 
-.directive('accordion', function() {
+/**
+ * @ngdoc directive
+ * @name ui.semantic.accordion.directive:accordion
+ * @restrict EAC
+ * @element ANY
+ * @priority 1000
+ * @scope
+ *
+ * @param exclusive Set to false to allow multiple sections to be open at the same time
+ * @param collapsible Set to false to require an accordion to always have a section open
+ * @param duration Duration in ms of opening animation
+ * @param easing Easing equation used for accordion (additional options require
+ *               [jQuery easing](http://gsgd.co.uk/sandbox/jquery/easing/))
+ *
+ * @param onClose AngularJS expression to be evaluated when a content element is closed.
+ * @param onOpen  AngularJS expression to be evaluated when a content element is opened.
+ * @param onChange  AngularJS expression to be evaluated when a content element is changed.
+ *
+ * @description
+ *
+ * An accordion displays a single piece of content, while allowing the option of displaying other
+ * related content.
+ *
+ * **Callbacks**
+ * There are 3 callbacks used by the accordion module:
+ *   - onClose()
+ *   - onOpen()
+ *   - onChange()
+ *
+ * Each callback will optionally evaluate an AngularJS expression, with a local variable _active_,
+ * granting access to the currently active content.
+ */
+.directive('accordion', function($timeout, $parse) {
   return {
     restrict: 'EAC',
     scope: {
-      // Accordion settings
-      // exclusive: '=',
-      // collapsible: '=',
-      // duration: '=',
-      // easing: '=',
-      
       // Accordion callbacks
       onClose: '&',
       onOpen: '&',
@@ -17,35 +43,48 @@ angular.module('ui.semantic.accordion', [])
 
       active: '@'
     },
-    compile: function($parse) {
+    transclude: true,
+    replace: true,
+    template: '<div ng-transclude></div>',
+    controller: function() {},
+    compile: function() {
       return function(scope, element, attrs) {
         scope.exclusive = attrs.exclusive && scope.$parent.$eval(attrs.exclusive);
         scope.collapsible = attrs.collapsible && scope.$parent.$eval(attrs.collapsible);
         scope.duration = attrs.duration && scope.$parent.$eval(attrs.duration);
         scope.easing = attrs.easing && scope.$parent.$eval(attrs.easing);
 
-        jQuery(element).accordion({
-          exclusive: scope.exclusive,
-          collapsible: scope.collapsible,
-          duration: scope.duration,
-          easing: scope.easing,
+        element.addClass('ui').addClass('accordion');
 
-          onClose: function() {
-            scope.active = $(this);
-            scope.onClose();
-          },
+        // Wait for the DOM to be built before constructing the accordion.
+        var unregister = scope.$watch('$$phase', function() {
+          unregister();
+          $(element).accordion({
+            exclusive: scope.exclusive,
+            collapsible: scope.collapsible,
+            duration: scope.duration,
+            easing: scope.easing,
 
-          onOpen: function() {
-            scope.active = $(this);
-            scope.onOpen();
-          },
+            onClose: function() {
+              if (attrs.onClose) {
+                $parse(attrs.onClose)(scope.$parent, { 'active': $(this) });
+              }
+            },
 
-          onChange: function() {
-            scope.active = $(this);
-            scope.onChange();
-          }
+            onOpen: function() {
+              if (attrs.onOpen) {
+                $parse(attrs.onOpen)(scope.$parent, { 'active': $(this) });
+              }
+            },
+
+            onChange: function() {
+              if (attrs.onChange) {
+                $parse(attrs.onChange)(scope.$parent, { 'active': $(this) });
+              }
+            }
+          });
         });
-      }
+      };
     }
-  }
+  };
 });

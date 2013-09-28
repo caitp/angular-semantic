@@ -8,6 +8,18 @@ describe('accordion', function() {
     $scope = _$rootScope_;
   }));
 
+  describe('dom elements', function() {
+    it('are preserved', function() {
+      var $title = $('<div class="title"><h1>Test</h1></div>'),
+          $content = $('<div class="content"><p>Content</p></div>'),
+          $element = $('<accordion></accordion>');
+      $compile($element.append($title).append($content))($scope);
+      $scope.$digest();
+      expect($element.children('.title').first().html()).toEqual($title.html());
+      expect($element.children('.content').first().html()).toEqual($content.html());
+    });
+  });
+
   describe('option', function() {
     $.each(['collapsible', 'duration', 'easing', 'exclusive'], function(_, attr) {
       describe('attribute ' + attr, function() {
@@ -39,23 +51,53 @@ describe('accordion', function() {
   });
 
   describe('callback', function() {
+    var active, inactive;
+    beforeEach(function() {
+      active = '<div class="title active"></div><div class="content active"></div>';
+      inactive = '<div class="title"></div><div class="content"></div>';
+    });
     it('onChange fired on active content change', function() {
-      // TODO
+      $scope.onchange = function() {};
+      spyOn($scope, 'onchange');
+      $element = $compile('<accordion duration="0" class="basic" on-change="onchange()">'+
+        active+inactive+'</accordion>')($scope);
+      $scope.$digest();
+      $element.accordion('toggle', 0);
+      expect($scope.onchange).toHaveBeenCalled();
     });
 
     it('onClose fired on content close', function() {
-      // TODO
+      $scope.onclose = function() {};
+      spyOn($scope, 'onclose');
+      $element = $compile('<accordion duration="0" exclusive="false" class="basic" ' +
+        'on-close="onclose()">' + active+active+'</accordion>')($scope);
+      $scope.$digest();
+      $element.accordion('close', 0);
+      expect($scope.onclose).toHaveBeenCalled();
     });
 
     it('onOpen fired on content open', function() {
-      // TODO
+      $scope.onopen = function() {};
+      spyOn($scope, 'onopen');
+      $element = $compile('<accordion duration="0" class="basic" on-open="onopen()">'+
+        inactive+inactive+'</accordion>')($scope);
+      $scope.$digest();
+      $element.accordion('open', 1);
+      expect($scope.onopen).toHaveBeenCalled();
     });
 
     $.each(['on-change', 'on-close', 'on-open'], function(_, cb) {
       var c = $.camelCase(cb);
       describe(c, function() {
         it('has the active slide as its context', function() {
-          // TODO
+          $scope[c] = function(active) {};
+          spyOn($scope, c);
+          $element = $compile('<accordion duration="0" class="basic" '+cb+'="'+c+'(active)">' +
+                              active + inactive + '</accordion>')($scope);
+          $scope.$digest();
+          $element.accordion('close', 0);
+          $element.accordion('open', 1);
+          expect($scope[c]).toHaveBeenCalledWith(jasmine.any(Object));
         });
       });
     });

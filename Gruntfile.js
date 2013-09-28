@@ -128,11 +128,12 @@ module.exports = function(grunt) {
             "console": true,
             angular: true,
             jQuery: true,
+            $: true,
             document: true
           }
         },
         files: [{
-          src: ['src/*.js', '!src/*.spec.js']
+          src: ['src/**/*.js', '!src/**/*.spec.js']
         }]
       }
     },
