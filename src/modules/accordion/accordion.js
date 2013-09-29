@@ -60,27 +60,25 @@ angular.module('ui.semantic.accordion', [])
         var unregister = scope.$watch('$$phase', function() {
           unregister();
           $(element).accordion({
+            debug: attrs.debug || false,
+            performance: attrs.performance || false,
+            verbose: attrs.verbose || false,
+
             exclusive: scope.exclusive,
             collapsible: scope.collapsible,
             duration: scope.duration,
             easing: scope.easing,
 
             onClose: function() {
-              if (attrs.onClose) {
-                $parse(attrs.onClose)(scope.$parent, { 'active': $(this) });
-              }
+              scope.onClose({ 'active': $(this) });
             },
 
             onOpen: function() {
-              if (attrs.onOpen) {
-                $parse(attrs.onOpen)(scope.$parent, { 'active': $(this) });
-              }
+              scope.onOpen({ 'active': $(this) });
             },
 
             onChange: function() {
-              if (attrs.onChange) {
-                $parse(attrs.onChange)(scope.$parent, { 'active': $(this) });
-              }
+              scope.onChange({ 'active': $(this) });
             }
           });
         });
