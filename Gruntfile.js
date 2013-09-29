@@ -354,7 +354,7 @@ module.exports = function(grunt) {
     var modname = name;
     var module = {
       name: name,
-      moduleName: enquote('ui.' + modname),
+      moduleName: enquote('ui.semantic.' + modname),
       displayName: ucwords(breakup(name, ' ')),
       srcFiles: grunt.file.expand({ignore: "*.spec.js"}, "src/"+name+".js"),
       tplFiles: grunt.file.expand("template/"+name+"/*.html"),
@@ -405,8 +405,8 @@ module.exports = function(grunt) {
 
     grunt.file.expand({
       filter: 'isFile', cwd: '.'
-    }, 'src/*.js').forEach(function(file) {
-      findModule(file.split('/')[1].split('.')[0]);
+    }, 'src/**/*.js').forEach(function(file) {
+      findModule(file.split('/')[2].split('.')[0]);
     });
 
     var modules = grunt.config('modules');
