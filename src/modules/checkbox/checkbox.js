@@ -100,27 +100,30 @@ angular.forEach(['checkbox', 'slider', 'toggle'], function(name, _) {
       link: function(scope, element, attrs, ctrl) {
         var x = $('<input type="'+inputType+'" ng-model="checked"></input><label></label>');
         element = element.prepend($compile(x)(scope));
-        element.checkbox({
-          verbose: scope.verbose || false,
-          debug: scope.debug || false,
-          performance: scope.performance || false,
+        scope.$watch('$$phase', function() {
+          element.checkbox({
+            verbose: attrs.verbose || false,
+            debug: attrs.debug || false,
+            performance: attrs.performance || false,
 
-          onEnable: function() {
-            scope.onEnable();
-          },
-          onDisable: function() {
-            scope.onDisable();
-          },
-          onChange: function() {
-            scope.onChange({checked: scope.checked});
-          },
-        });
-        scope.$watch('checked', function(value) {
-          if (value) {
-            element.checkbox('enable');
-          } else {
-            element.checkbox('disable');
-          }
+            onEnable: function() {
+              scope.onEnable();
+            },
+            onDisable: function() {
+              scope.onDisable();
+            },
+            onChange: function() {
+              scope.checked = element.find('input').prop('checked');
+              scope.onChange({checked: scope.checked });
+            },
+          });
+          scope.$watch('checked', function(value) {
+            if (value) {
+              element.checkbox('enable');
+            } else {
+              element.checkbox('disable');
+            }
+          });
         });
       }
     };
