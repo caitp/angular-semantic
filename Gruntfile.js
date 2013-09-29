@@ -23,7 +23,7 @@ module.exports = function(grunt) {
     modules: [],
     pkg: pkg,
     dist: 'dist',
-    filename: 'ui-comments',
+    filename: 'angular-semantic',
     meta: {
       modules: 'angular.module("ui.semantic");',
       tplmodules: 'angular.module("ui.semantic.tpls", [<%= tplModules %>]);',
