@@ -32,7 +32,7 @@ module.exports = function(config) {
 
     // test results reporter to use
     // possible values: dots || progress
-    reporters: 'progress',
+    reporters: ['story','dots'], // 'progress',
 
     // web server port
     port: 9018,
