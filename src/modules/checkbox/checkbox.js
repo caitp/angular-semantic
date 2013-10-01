@@ -83,46 +83,67 @@ angular.forEach(['checkbox', 'slider', 'toggle'], function(name, _) {
   var needCheckbox = name !== 'checkbox' ? 'checkbox ' : '',
       inputType = name !== 'radio' ? 'checkbox' : 'radio';
       
-  module.directive(name, function($compile, $timeout) {
+  module.directive(name, function($compile, $parse, $timeout) {
     var directive = {
       restrict: 'EA',
-      template: '<div class="ui '+needCheckbox+name+'"></div>',
-      require: 'ngModel',
-      transclude: false,
       replace: true,
-      scope: {
-        label: '@',
-        checked: '=ngModel',
-        onEnable: '&',
-        onDisable: '&',
-        onChange: '&'
-      },
+      require: 'ngModel',
+      template: '<div class="ui '+needCheckbox+name+'"><label></label></div>',
       link: function(scope, element, attrs, ctrl) {
-        var x = $('<input type="'+inputType+'" ng-model="checked"></input><label></label>');
-        element = element.prepend($compile(x)(scope));
-        scope.$watch('$$phase', function() {
+        var callbacks = {}, unregister, skip = false, model,
+            context = scope,
+            $getter = $parse(attrs.ngModel),
+            $setter = $getter.assign,
+            $input = $('<input type="'+inputType+'" '+'ng-model="'+attrs.ngModel+'">');
+        $input = $compile($input)(scope);
+        element.prepend($input);
+        angular.forEach(['onEnable', 'onDisable', 'onChange'], function(name) {
+          scope.$watch(function() { return attrs[name]; }, function(newval) {
+            callbacks[name] = callback(newval);
+          });
+        });
+        angular.forEach(['onChange', 'onEnable', 'onDisable'], function(name) {
+          callbacks[name] = callback(attrs[name]);
+          attrs.$observe(name, function() {
+            callbacks[name] = callback(attrs[name]);
+          });
+        });
+        function callback(attr) {
+          if (angular.isDefined(attr)) {
+            return $parse(attr);
+          } else {
+            return function() {};
+          }
+        }
+
+
+        unregister = scope.$watch('$$phase', function() {
+          unregister();
           element.checkbox({
             verbose: attrs.verbose || false,
             debug: attrs.debug || false,
             performance: attrs.performance || false,
 
             onEnable: function() {
-              scope.onEnable();
+              scope.$evalAsync(function(scope) {
+                $setter(context, true);
+                callbacks.onEnable(context, { checked: true });
+              });
             },
             onDisable: function() {
-              scope.onDisable();
+              scope.$evalAsync(function(scope) {
+                $setter(context, false);
+                callbacks.onDisable(context, { checked: false });
+              });
             },
             onChange: function() {
-              scope.checked = element.find('input').prop('checked');
-              scope.onChange({checked: scope.checked });
+              scope.$evalAsync(function(scope) {
+                callbacks.onChange(context, { checked: $getter(context) });
+              });
             },
           });
-          scope.$watch('checked', function(value) {
-            if (value) {
-              element.checkbox('enable');
-            } else {
-              element.checkbox('disable');
-            }
+          scope.$watch(function() { return $getter(context); }, function(value) {
+            element.checkbox(value ? 'enable' : 'disable');
           });
         });
       }
