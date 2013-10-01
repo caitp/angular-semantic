@@ -76,6 +76,24 @@ describe('checkbox', function() {
         $scope.$digest();
         expect($element[0].id).toEqual('test');
       });
+
+      $.each(['on-change', 'on-enable', 'on-disable'], function(_, attr) {
+        var cb = $.camelCase(attr);
+        it(cb + ' event evaluates expr with checked value', function() {
+          var startWith = attr === 'on-enable' ? false : true,
+              expected = attr === 'on-change' ? startWith : !startWith,
+              called = false;
+          $scope.data = startWith;
+          $scope[cb] = function() {}
+          spyOn($scope, cb);
+          $element = $compile($('<'+name+' ng-model="data" ' + attr + '="'+cb+'(checked)"></'+
+                              name+'>'))($scope);
+          $scope.$digest();
+          $scope.data = !startWith;
+          $scope.$digest();
+          expect($scope[cb]).toHaveBeenCalledWith(expected);
+        });        
+      });
     });
     
     describe(name + ' (attribute)', function() {
@@ -139,6 +157,24 @@ describe('checkbox', function() {
         $element = $compile($('<div '+name+' id="test" ng-model="data.checked"></'+name+'>'))($scope);
         $scope.$digest();
         expect($element[0].id).toEqual('test');
+      });
+
+      $.each(['on-change', 'on-enable', 'on-disable'], function(_, attr) {
+        var cb = $.camelCase(attr);
+        it(cb + ' event evaluates expr with checked value', function() {
+          var startWith = attr === 'on-enable' ? false : true,
+              expected = attr === 'on-change' ? startWith : !startWith,
+              called = false;
+          $scope.data = startWith;
+          $scope[cb] = function() {}
+          spyOn($scope, cb);
+          $element = $compile($('<div '+name+' ng-model="data" ' + attr + '="'+cb+'(checked)">'+
+                              '</div>'))($scope);
+          $scope.$digest();
+          $scope.data = !startWith;
+          $scope.$digest();
+          expect($scope[cb]).toHaveBeenCalledWith(expected);
+        });        
       });
     });
   });
