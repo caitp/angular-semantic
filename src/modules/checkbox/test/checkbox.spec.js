@@ -180,4 +180,216 @@ describe('checkbox', function() {
       });
     });
   });
+
+  describe('radio', function() {
+    describe('radio (element)', function() {
+      it('must be the child of a radio-group', function() {
+        $element = $('<radio></radio>');
+        expect($compile($element).bind($scope, $scope)).toThrow();        
+      });
+
+      it('must be the child of a radio-group with a model', function() {
+        $element = $('<radio-group><radio></radio></radio-group>');
+        $compile = $compile($element);
+        expect($compile).toThrow();
+      });
+
+      it('appends an <input type="radio"> element as a child', function() {
+        $scope.data.sel = true;
+        $element = $compile($('<radio-group ng-model="data.sel"><radio /></radio-group>'))($scope);
+        $scope.$digest();
+        expect($element.find('input').length).toEqual(1);
+        expect($element.find('input').prop('type')).toEqual('radio');
+      });
+
+      it('is data-bound with ng-model', function() {
+        var $r;
+        $element = $('<radio-group ng-model="data.sel">' +
+                      '<radio value="1"></radio>' +
+                      '<radio value="2"></radio>' +
+                     '</radio-group>');
+        $element = $compile($element)($scope);
+        $scope.$digest();
+        $r = $element.find('input');
+        $scope.data.sel = "1";
+        $scope.$digest();
+        expect($r[0].checked).toEqual(true);
+        expect($r[1].checked).toEqual(false);
+        $scope.data.sel = "2";
+        $scope.$digest();
+        expect($r[0].checked).toEqual(false);
+        expect($r[1].checked).toEqual(true);
+      });
+
+      it('changes selection on click', function() {
+        var $r;
+        $element = $('<radio-group ng-model="data.sel">' +
+                      '<radio value="1"></radio>' +
+                      '<radio value="2"></radio>' +
+                     '</radio-group>');
+        $element = $compile($element)($scope);
+        $scope.$digest();
+        $r = $element.find('input');
+        $($r[0]).trigger('click');
+        $scope.$digest();
+        expect($r[0].checked).toEqual(true);
+        expect($r[1].checked).toEqual(false);
+        $($r[1]).trigger('click');
+        $scope.$digest();
+        expect($r[0].checked).toEqual(false);
+        expect($r[1].checked).toEqual(true);
+      });
+
+      it('radio-group on-select event evaluates expr with selected element and value', function() {
+        var onSelect = $scope.onSelect = jasmine.createSpy('onSelect');
+        $element = $('<radio-group name="test" on-select="onSelect(selected, value)" ' +
+                      'ng-model="data.sel">' +
+                      '<radio value="1"></radio>' +
+                      '<radio value="2"></radio>' +
+                      '</radio-group>');
+        $element = $compile($element)($scope);
+        $scope.$digest();
+        $scope.data.sel = "2";
+        $scope.$digest();
+        $timeout.flush();
+        expect(onSelect).toHaveBeenCalledWith(jasmine.any(Object), "2");
+        expect(onSelect.callCount).toEqual(1);
+        $scope.onSelect.reset();
+        $scope.data.sel = "1";
+        $scope.$digest();
+        $timeout.flush();
+        expect(onSelect).toHaveBeenCalledWith(jasmine.any(Object), "1");
+        expect(onSelect.callCount).toEqual(1);
+      });
+
+      it('radio on-select event evaluates expr with selected element and value', function() {
+        var onSelect = $scope.onSelect = jasmine.createSpy('onSelect'),
+            onSelect2 = $scope.onSelect2 = jasmine.createSpy('onSelect2');
+        $element = $('<radio-group name="test" ' +
+                      'ng-model="data.sel">' +
+                      '<radio value="1" on-select="onSelect2(selected,value)"></radio>' +
+                      '<radio value="2" on-select="onSelect(selected,value)"></radio>' +
+                      '</radio-group>');
+        $element = $compile($element)($scope);
+        $scope.$digest();
+        $scope.data.sel = "2";
+        $scope.$digest();
+        $timeout.flush();
+        expect(onSelect).toHaveBeenCalledWith(jasmine.any(Object), "2");
+        expect(onSelect.callCount).toEqual(1);
+        expect(onSelect2.callCount).toEqual(0);
+        $scope.data.sel = "1";
+        $scope.$digest();
+        $timeout.flush();
+        expect(onSelect2).toHaveBeenCalledWith(jasmine.any(Object), "1");
+        expect(onSelect2.callCount).toEqual(1);
+        expect(onSelect.callCount).toEqual(1);
+      });
+    });
+
+    describe('radio (attribute)', function() {
+      it('must be the child of a radio-group', function() {
+        $element = $('<div radio></div>');
+        expect($compile($element).bind($scope, $scope)).toThrow();        
+      });
+
+      it('must be the child of a radio-group with a model', function() {
+        $element = $('<div radio-group><div radio></div></div>');
+        $compile = $compile($element);
+        expect($compile).toThrow();
+      });
+
+      it('appends an <input type="radio"> element as a child', function() {
+        $scope.data.sel = true;
+        $element = $compile($('<div radio-group ng-model="data.sel"><div radio /></div>'))($scope);
+        $scope.$digest();
+        expect($element.find('input').length).toEqual(1);
+        expect($element.find('input').prop('type')).toEqual('radio');
+      });
+
+      it('is data-bound with ng-model', function() {
+        var $r;
+        $element = $('<div radio-group ng-model="data.sel">' +
+                      '<div radio value="1"></div>' +
+                      '<div radio value="2"></div>' +
+                     '</div>');
+        $element = $compile($element)($scope);
+        $scope.$digest();
+        $r = $element.find('input');
+        $scope.data.sel = "1";
+        $scope.$digest();
+        expect($r[0].checked).toEqual(true);
+        expect($r[1].checked).toEqual(false);
+        $scope.data.sel = "2";
+        $scope.$digest();
+        expect($r[0].checked).toEqual(false);
+        expect($r[1].checked).toEqual(true);
+      });
+
+      it('changes selection on click', function() {
+        var $r;
+        $element = $('<div radio-group ng-model="data.sel">' +
+                      '<div radio value="1"></div>' +
+                      '<div radio value="2"></div>' +
+                     '</div>');
+        $element = $compile($element)($scope);
+        $scope.$digest();
+        $r = $element.find('input');
+        $($r[0]).trigger('click');
+        $scope.$digest();
+        expect($r[0].checked).toEqual(true);
+        expect($r[1].checked).toEqual(false);
+        $($r[1]).trigger('click');
+        $scope.$digest();
+        expect($r[0].checked).toEqual(false);
+        expect($r[1].checked).toEqual(true);
+      });
+
+      it('radio-group on-select event evaluates expr with selected element and value', function() {
+        var onSelect = $scope.onSelect = jasmine.createSpy('onSelect');
+        $element = $('<div radio-group name="test" on-select="onSelect(selected, value)" ' +
+                      'ng-model="data.sel">' +
+                      '<div radio value="1"></div>' +
+                      '<div radio value="2"></div>' +
+                      '</div>');
+        $element = $compile($element)($scope);
+        $scope.$digest();
+        $scope.data.sel = "2";
+        $scope.$digest();
+        $timeout.flush();
+        expect(onSelect).toHaveBeenCalledWith(jasmine.any(Object), "2");
+        expect(onSelect.callCount).toEqual(1);
+        $scope.onSelect.reset();
+        $scope.data.sel = "1";
+        $scope.$digest();
+        $timeout.flush();
+        expect(onSelect).toHaveBeenCalledWith(jasmine.any(Object), "1");
+        expect(onSelect.callCount).toEqual(1);
+      });
+
+      it('radio on-select event evaluates expr with selected element and value', function() {
+        var onSelect = $scope.onSelect = jasmine.createSpy('onSelect'),
+            onSelect2 = $scope.onSelect2 = jasmine.createSpy('onSelect2');
+        $element = $('<div radio-group name="test" ' +
+                      'ng-model="data.sel">' +
+                      '<div radio value="1" on-select="onSelect2(selected,value)"></div>' +
+                      '<div radio value="2" on-select="onSelect(selected,value)"></div>' +
+                      '</div>');
+        $element = $compile($element)($scope);
+        $scope.$digest();
+        $scope.data.sel = "2";
+        $scope.$digest();
+        $timeout.flush();
+        expect(onSelect).toHaveBeenCalledWith(jasmine.any(Object), "2");
+        expect(onSelect.callCount).toEqual(1);
+        expect(onSelect2.callCount).toEqual(0);
+        $scope.data.sel = "1";
+        $scope.$digest();
+        $timeout.flush();
+        expect(onSelect2).toHaveBeenCalledWith(jasmine.any(Object), "1");
+        expect(onSelect2.callCount).toEqual(1);
+        expect(onSelect.callCount).toEqual(1);
+      });
+    });
+  });
 });
