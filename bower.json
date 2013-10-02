@@ -1,0 +1,20 @@
+{
+  "name": "angular-semantic",
+  "version": "0.0.0",
+  "authors": [
+    "Caitlin Potter <snowball@defpixel.com>"
+  ],
+  "description": "AngularJS directives for Semantic-UI",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "semantic-ui": "*"
+  }
+}

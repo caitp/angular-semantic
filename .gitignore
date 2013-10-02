@@ -1,0 +1,7 @@
+*.html.js
+.DS_Store
+.grunt
+/lib
+/node_modules
+/dist
+*-SNAPSHOT*
