@@ -10,7 +10,7 @@ angular.module('ui.semantic.accordion', []).directive('accordion', [
   '$parse',
   function ($timeout, $parse) {
     return {
-      restrict: 'EAC',
+      restrict: 'EA',
       scope: {
         onClose: '&',
         onOpen: '&',

@@ -1,0 +1,45 @@
+<h1><code ng:non-bindable="">checkbox</code>
+<span class="hint">(directive in module <code ng:non-bindable="">ui.semantic.checkbox</code>
+)</span>
+</h1>
+<div><h2 id="Description">Description</h2>
+<div class="description"><p>A checkbox visually indicates the status of a user's selection</p>
+
+<p><strong>Events</strong></p>
+
+<p>There are 3 events which evaluate expressions used by the checkbox directive:</p>
+
+<ul>
+<li>onDisable(checked)
+<ul><li>checked {Boolean} The checkbox's checked state</li></ul></li>
+<li>onEnable(checked)
+<ul><li>checked {Boolean} The checkbox's checked state</li></ul></li>
+<li>onChange(checked)
+<ul><li>checked {Boolean} The checkbox's checked state</li></ul></li>
+</ul></div>
+<h2 id="Usage">Usage</h2>
+<div class="usage">as element:<pre class="prettyprint linenums">&lt;checkbox
+       on-enable="{expression}"
+       on-disable="{expression}"
+       on-change="{expression}"&gt;
+&lt;/checkbox&gt;</pre>
+as attribute<pre class="prettyprint linenums">&lt;ANY checkbox
+     on-enable="{expression}"
+     on-disable="{expression}"
+     on-change="{expression}"&gt;
+   ...
+&lt;/ANY&gt;</pre>
+<h3 id="Directive.info">Directive info</h3>
+<div class="directive-info"><ul><li>This directive creates new scope.</li>
+</ul>
+</div>
+<h3 id="Parameters">Parameters</h3>
+<ul class="parameters"><li><code ng:non-bindable="">on-enable – {expression} – </code>
+<p>Callback after a checkbox is enabled.</p></li>
+<li><code ng:non-bindable="">on-disable – {expression} – </code>
+<p>Callback after a checkbox is disabled.</p></li>
+<li><code ng:non-bindable="">on-change – {expression} – </code>
+<p>Callback after a checkbox is either disabled or enabled.</p></li>
+</ul>
+</div>
+</div>

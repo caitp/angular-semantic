@@ -1,0 +1,43 @@
+<h1><code ng:non-bindable="">radio-group</code>
+<span class="hint">(directive in module <code ng:non-bindable="">ui.semantic.checkbox</code>
+)</span>
+</h1>
+<div><h2 id="Description">Description</h2>
+<div class="description"><p>A radio-group is a set of mutually exclusive selectable options. The group itself holds a
+reference to a model, which is manipulated by the selection of child radio elements.</p>
+
+<p>The radio-group element requires a name attribute, which each child <a href="#/api/ui.semantic.checkbox.directive:radio">radio</a> element will automatically share.</p>
+
+<p><strong>Events</strong></p>
+
+<ul>
+<li>onSelect(selected, value)
+<ul><li>selected {JQuery element} The selected radio button</li>
+<li>value {*} The selected radio button's model value</li></ul></li>
+</ul></div>
+<h2 id="Usage">Usage</h2>
+<div class="usage">as element:<pre class="prettyprint linenums">&lt;radio-group
+       name="{string}"
+       ng-model="{string}"
+       on-select="{expression}"&gt;
+&lt;/radio-group&gt;</pre>
+as attribute<pre class="prettyprint linenums">&lt;ANY radio-group
+     name="{string}"
+     ng-model="{string}"
+     on-select="{expression}"&gt;
+   ...
+&lt;/ANY&gt;</pre>
+<h3 id="Directive.info">Directive info</h3>
+<div class="directive-info"><ul><li>This directive creates new scope.</li>
+</ul>
+</div>
+<h3 id="Parameters">Parameters</h3>
+<ul class="parameters"><li><code ng:non-bindable="">name – {string} – </code>
+<p><strong>required</strong> The name of the form field.</p></li>
+<li><code ng:non-bindable="">ng-model – {string} – </code>
+<p><strong>required</strong> The data binding for the radio buttons</p></li>
+<li><code ng:non-bindable="">on-select – {expression} – </code>
+<p>Callback after a checkbox is enabled.</p></li>
+</ul>
+</div>
+</div>
