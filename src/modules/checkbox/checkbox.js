@@ -18,14 +18,14 @@ var module = angular.module('ui.semantic.checkbox', []);
  *
  * A checkbox visually indicates the status of a user's selection
  *
- * **Callbacks**
- * There are 3 callbacks used by the accordion module:
- *   - onDisable()
- *   - onEnable()
+ * **Events**
+ * There are 3 events which evaluate expressions used by the checkbox directive:
+ *   - onDisable(checked)
+ *     - checked {Boolean} The checkbox's checked state
+ *   - onEnable(checked)
+ *     - checked {Boolean} The checkbox's checked state
  *   - onChange(checked)
- *
- * Each callback will optionally evaluate an AngularJS expression. onChange provides access to the
- * current checkbox state.
+ *     - checked {Boolean} The checkbox's checked state
  */
 
 /**
@@ -44,14 +44,14 @@ var module = angular.module('ui.semantic.checkbox', []);
  *
  * A checkbox visually indicates the status of a user's selection
  *
- * **Callbacks**
- * There are 3 callbacks used by the accordion module:
- *   - onDisable()
- *   - onEnable()
+ * **Events**
+ * There are 3 events which evaluate expressions used by the toggle directive:
+ *   - onDisable(checked)
+ *     - checked {Boolean} The checkbox's checked state
+ *   - onEnable(checked)
+ *     - checked {Boolean} The checkbox's checked state
  *   - onChange(checked)
- *
- * Each callback will optionally evaluate an AngularJS expression. onChange provides access to the
- * current checkbox state.
+ *     - checked {Boolean} The checkbox's checked state
  */
 
 /**
@@ -70,14 +70,14 @@ var module = angular.module('ui.semantic.checkbox', []);
  *
  * A checkbox visually indicates the status of a user's selection
  *
- * **Callbacks**
- * There are 3 callbacks used by the accordion module:
+ * **Events**
+ * There are 3 events which evaluate expressions used by the slider directive:
  *   - onDisable(checked)
+ *     - checked {Boolean} The checkbox's checked state
  *   - onEnable(checked)
+ *     - checked {Boolean} The checkbox's checked state
  *   - onChange(checked)
- *
- * Each callback will optionally evaluate an AngularJS expression. onChange provides access to the
- * current checkbox state.
+ *     - checked {Boolean} The checkbox's checked state
  */
 angular.forEach(['checkbox', 'slider', 'toggle'], function(name, _) {
   var needCheckbox = name !== 'checkbox' ? 'checkbox ' : '',
@@ -230,13 +230,10 @@ RadioGroupCtrl.prototype.selectElement = function(element, value) {
  * The radio-group element requires a name attribute, which each child radio element will
  * automatically share.
  *
- * **Callbacks**
+ * **Events**
  *   - onSelect(selected, value)
  *     - selected {JQuery element} The selected radio button
  *     - value {*} The selected radio button's model value
- *
- * Each callback will optionally evaluate an AngularJS expression. onChange provides access to the
- * current checkbox state.
  */
 module.directive('radioGroup', function($controller, $parse, $timeout) {
   return {
@@ -309,13 +306,11 @@ module.directive('radioGroup', function($controller, $parse, $timeout) {
  *
  * The radio button must be a child of a radio-group.
  *
- * **Callbacks**
+ * **Events**
  *   - onSelect(selected, value) 
  *     - selected {JQuery element} The selected radio button
  *     - value {*} The selected radio button's model value
  *
- * Each callback will optionally evaluate an AngularJS expression. onChange provides access to the
- * current checkbox state.
  */
 .directive('radio', function($compile, $timeout) {
   return {
