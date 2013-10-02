@@ -185,7 +185,7 @@ describe('checkbox', function() {
     describe('radio (element)', function() {
       it('must be the child of a radio-group', function() {
         $element = $('<radio></radio>');
-        expect($compile($element).bind($scope, $scope)).toThrow();        
+        expect(angular.bind($scope,$compile($element), $scope)).toThrow();        
       });
 
       it('must be the child of a radio-group with a model', function() {
@@ -290,7 +290,7 @@ describe('checkbox', function() {
     describe('radio (attribute)', function() {
       it('must be the child of a radio-group', function() {
         $element = $('<div radio></div>');
-        expect($compile($element).bind($scope, $scope)).toThrow();        
+        expect(angular.bind($scope,$compile($element), $scope)).toThrow();
       });
 
       it('must be the child of a radio-group with a model', function() {
