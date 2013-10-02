@@ -220,7 +220,7 @@ module.exports = function(grunt) {
         }
       },
       api: {
-        src: ["src/comments.js", "src/**/*.ngdoc"],
+        src: ["src/**/*.js", "src/**/*.ngdoc", "!**/*.spec.js"],
         title: "API Documentation"
       }
     },
