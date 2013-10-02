@@ -7,87 +7,102 @@ angular.module('ui.semantic.modal', [])
     transclude: true,
     replace: true,
     link: function(originalScope, element, attrs) {
-      var $scope = originalScope.$new();
+      var $scope = originalScope.$new(), already = false;
       var vars = {
-        'debug': [],
-        'verbose': [],
-        'performance': [],
+        'debug': ['@'],
+        'verbose': ['@'],
+        'performance': ['@'],
 
-        'isActive': [],
-        'offset': [],
-        'context': [],
-        'closable': [],
-        'transition': [],
-        'duration': [],
-        'easing': [],
+        'isActive': ['@'],
+        'offset': ['@'],
+        'context': ['@'],
+        'closable': ['@'],
+        'transition': ['@'],
+        'duration': ['@'],
+        'easing': ['@'],
 
         // Callbacks
-        'onShow': [],
-        'onHide': []
+        'onShow': ['&'],
+        'onHide': ['&']
       };
 
       angular.forEach(Object.keys(vars), function(name) {
         var data = vars[name];
-        parseVar(data, attrs[name]);
+        parseVar(name, data, attrs[name]);
         $scope.$watch(function() { return attrs[name]; }, function(newval) {
-          parseVar(data, newval);
+          parseVar(name, data, newval);
         });
       });
-      function parseVar(data, value) {
+      function parseVar(name, data, value) {
         if (typeof value === 'string') {
-          var parsed = $parse(value);
-          data[0] = angular.bind(originalScope, parsed, originalScope);
-          data[1] = angular.bind(originalScope, parsed.assign, originalScope);
-        } else {
-          data[1] = data[0] = function() {};
+          try {
+            var parsed = $parse(value);
+            data[1] = angular.bind(originalScope, parsed, originalScope);
+            data[2] = angular.bind(originalScope, parsed.assign, originalScope);
+          } catch (e) {
+            if (data[0] === '&') {
+              throw e;
+            }
+          }
+        }
+        if (!data[1]) {
+          data[1] = data[2] = function() { return attrs[name]; };
         }
       }
       function get(name) {
-        return vars[name][0]();
+        return vars[name][1]();
       }
       function set(name, value) {
-        return vars[name][1](value);
+        return vars[name][2](value);
       }
       function run(name, locals) {
-        return vars[name][0](locals);
+        return vars[name][1](locals);
       }
+      function modalArgs() {
+        var args = {
+          // Modal settings
+          offset: get('offset') || parseInt(attrs.offset, 10) || 0,
+          context: get('context') || attrs.context || 'body',
+          closable: get('closable') || attrs.closable || true,
+          transition: get('transition') || attrs.transition || 'scale',
+          duration: get('duration') || parseInt(attrs.duration, 10) || 400,
+          easing: get('easing') || attrs.easing || 'easeOutExpo',
 
-      element.modal({
-        // Modal settings
-        offset: get('offset') || 0,
-        context: get('context') || 'body',
-        closable: get('closable') || true,
-        transition: get('transition') || 'scale',
-        duration: get('duration') || 400,
-        easing: get('easing') || 'easeOutExpo',
+          // Callbacks
+          onShow: function() {
+            already = true;
+            $scope.$evalAsync(function() {
+              set('isActive',true);
+              run('onShow',{modal: $(this)});
+            });
+          },
 
-        // Callbacks
-        onShow: function() {
-          $scope.$evalAsync(function() {
-            set('isActive',true);
-            run('onShow',{modal: $(this)});
-          });
-        },
+          onHide: function() {
+            already = true;
+            $scope.$evalAsync(function() {
+              set('isActive',false);
+              run('onHide',{modal: $(this)});
+            });
+          },
 
-        onHide: function() {
-          $scope.$evalAsync(function() {
-            set('isActive',false);
-            run('onHide',{modal: $(this)});
-          });
-        },
-
-        // Debug Options
-        debug: get('debug') || false,
-        performance: get('performance') || false,
-        verbose: get('verbose') || false
-      });
+          // Debug Options
+          debug: get('debug') || attrs.debug || false,
+          performance: get('performance') || attrs.performance || false,
+          verbose: get('verbose') || attrs.verbose || false
+        };
+        return args;
+      }
+      element.modal(modalArgs());
 
       $scope.$watch(function() { return get('isActive'); }, function(newval) {
-        if (get('isActive')) {
-          element.modal('show');
-        } else {
-          element.modal('hide');
+        if (!already) {
+          if (get('isActive')) {
+            element.modal('show');
+          } else {
+            element.modal('hide');
+          }
         }
+        already = false;
       });
     }
   };
