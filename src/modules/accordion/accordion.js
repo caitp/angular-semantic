@@ -3,38 +3,39 @@ angular.module('ui.semantic.accordion', [])
 /**
  * @ngdoc directive
  * @name ui.semantic.accordion.directive:accordion
- * @restrict EAC
+ * @restrict EA
  * @element ANY
- * @priority 1000
  * @scope
  *
- * @param exclusive Set to false to allow multiple sections to be open at the same time
- * @param collapsible Set to false to require an accordion to always have a section open
- * @param duration Duration in ms of opening animation
- * @param easing Easing equation used for accordion (additional options require
- *               [jQuery easing](http://gsgd.co.uk/sandbox/jquery/easing/))
+ * @param {boolean=true} exclusive Set to false to allow multiple sections to be open at the same
+ * time
+ * @param {boolean=true} collapsible Set to false to require an accordion to always have a section
+ * open
+ * @param {number=400} duration Duration in ms of opening animation
+ * @param {string=linear} easing Easing equation used for accordion (additional options require
+ * {@link http://gsgd.co.uk/sandbox/jquery/easing/ jQuery easing}
  *
- * @param onClose AngularJS expression to be evaluated when a content element is closed.
- * @param onOpen  AngularJS expression to be evaluated when a content element is opened.
- * @param onChange  AngularJS expression to be evaluated when a content element is changed.
+ * @param {expression} on-close AngularJS expression to be evaluated when a content element is
+ * closed.
+ * @param {expression} on-cpen AngularJS expression to be evaluated when a content element is
+ * opened.
+ * @param {expression} on-change AngularJS expression to be evaluated when a content element is
+ * changed.
  *
  * @description
  *
  * An accordion displays a single piece of content, while allowing the option of displaying other
  * related content.
  *
- * **Callbacks**
- * There are 3 callbacks used by the accordion module:
+ * **Events**
+ * There are 3 events which evaluate expressions used by the accordion directive:
  *   - onClose()
  *   - onOpen()
  *   - onChange()
- *
- * Each callback will optionally evaluate an AngularJS expression, with a local variable _active_,
- * granting access to the currently active content.
  */
 .directive('accordion', function($timeout, $parse) {
   return {
-    restrict: 'EAC',
+    restrict: 'EA',
     scope: {
       // Accordion callbacks
       onClose: '&',
