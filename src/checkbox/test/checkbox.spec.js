@@ -38,30 +38,16 @@ describe('checkbox', function() {
         expect($element.find('input').prop('checked')).toEqual(true);
       });
 
-      it('model is toggled when input is clicked', function() {
+      it('model is toggled when clicked', function() {
         $scope.data.checked = true;
         $element = $compile($('<'+name+' ng-model="data.checked">'))($scope);
         $scope.$digest();
-        $element.find('input').trigger('click');
+        $element.trigger('click');
         $scope.$digest();
-        waitsFor(function() {
-          if ($scope.data.checked === false) {
-            return true;
-          }
-        }, 'model to change after click', 500);
-        runs(function() {
-          expect($scope.data.checked).toEqual(false);
-          $element.find('input').trigger('click');
-          $scope.$digest();
-          waitsFor(function() {
-            if ($scope.data.checked === true) {
-              return true;
-            }
-          }, 'model to change after click', 500);
-          runs(function() {
-            expect($scope.data.checked).toEqual(true);
-          });
-        });
+        expect($scope.data.checked).toEqual(false);
+        $element.trigger('click');
+        $scope.$digest();
+        expect($scope.data.checked).toEqual(true);
       });
 
       it('retains element class attribute', function() {
@@ -82,17 +68,16 @@ describe('checkbox', function() {
         it(cb + ' event evaluates expr with checked value', function() {
           var startWith = attr === 'on-enable' ? false : true,
               expected = attr === 'on-change' ? startWith : !startWith,
-              called = false;
+              called = false,
+              callback = $scope[cb] = jasmine.createSpy(cb);
           $scope.data = startWith;
-          $scope[cb] = function() {}
-          spyOn($scope, cb);
-          $element = $compile($('<'+name+' ng-model="data" ' + attr + '="'+cb+'(checked)"></'+
-                              name+'>'))($scope);
+          $element = $compile('<'+name+' ng-model="data" ' + attr + '="'+cb+'(checked)"></'+
+                              name+'>')($scope);
           $scope.$digest();
-          $scope.data = !startWith;
-          $scope.$digest();
-          expect($scope[cb]).toHaveBeenCalledWith(expected);
-          expect($scope[cb].callCount).toEqual(1);
+          callback.reset();
+          $scope.$apply(function() { $scope.data = !startWith; });
+          expect(callback).toHaveBeenCalledWith(expected);
+          expect(callback.callCount).toEqual(1);
         });
       });
     });
@@ -125,26 +110,10 @@ describe('checkbox', function() {
         $scope.data.checked = true;
         $element = $compile($('<div '+name+' ng-model="data.checked">'))($scope);
         $scope.$digest();
-        $element.find('input').trigger('click');
-        $scope.$digest();
-        waitsFor(function() {
-          if ($scope.data.checked === false) {
-            return true;
-          }
-        }, 'model to change after click', 500);
-        runs(function() {
-          expect($scope.data.checked).toEqual(false);
-          $element.find('input').trigger('click');
-          $scope.$digest();
-          waitsFor(function() {
-            if ($scope.data.checked === true) {
-              return true;
-            }
-          }, 'model to change after click', 500);
-          runs(function() {
-            expect($scope.data.checked).toEqual(true);
-          });
-        });
+        $element.trigger('click');
+        expect($scope.data.checked).toEqual(false);
+        $element.trigger('click');
+        expect($scope.data.checked).toEqual(true);
       });
 
       it('retains element class attribute', function() {
@@ -165,15 +134,14 @@ describe('checkbox', function() {
         it(cb + ' event evaluates expr with checked value', function() {
           var startWith = attr === 'on-enable' ? false : true,
               expected = attr === 'on-change' ? startWith : !startWith,
-              called = false;
+              called = false,
+              callback = $scope[cb] = jasmine.createSpy(cb);
           $scope.data = startWith;
-          $scope[cb] = function() {}
-          spyOn($scope, cb);
           $element = $compile($('<div '+name+' ng-model="data" ' + attr + '="'+cb+'(checked)">'+
                               '</div>'))($scope);
           $scope.$digest();
-          $scope.data = !startWith;
-          $scope.$digest();
+          callback.reset();
+          $scope.$apply(function() { $scope.data = !startWith; });
           expect($scope[cb]).toHaveBeenCalledWith(expected);
           expect($scope[cb].callCount).toEqual(1);
         });
@@ -231,11 +199,9 @@ describe('checkbox', function() {
         $scope.$digest();
         $r = $element.find('input');
         $($r[0]).trigger('click');
-        $scope.$digest();
         expect($r[0].checked).toEqual(true);
         expect($r[1].checked).toEqual(false);
         $($r[1]).trigger('click');
-        $scope.$digest();
         expect($r[0].checked).toEqual(false);
         expect($r[1].checked).toEqual(true);
       });
@@ -249,15 +215,14 @@ describe('checkbox', function() {
                       '</radio-group>');
         $element = $compile($element)($scope);
         $scope.$digest();
-        $scope.data.sel = "2";
-        $scope.$digest();
-        $timeout.flush();
+        expect(onSelect).toHaveBeenCalledWith(jasmine.any(Object), "1");
+        expect(onSelect.callCount).toEqual(1);
+        onSelect.reset();
+        $scope.$apply(function() { $scope.data.sel = "2"; });
         expect(onSelect).toHaveBeenCalledWith(jasmine.any(Object), "2");
         expect(onSelect.callCount).toEqual(1);
         $scope.onSelect.reset();
-        $scope.data.sel = "1";
-        $scope.$digest();
-        $timeout.flush();
+        $scope.$apply(function() { $scope.data.sel = "1"; });
         expect(onSelect).toHaveBeenCalledWith(jasmine.any(Object), "1");
         expect(onSelect.callCount).toEqual(1);
       });
@@ -272,15 +237,14 @@ describe('checkbox', function() {
                       '</radio-group>');
         $element = $compile($element)($scope);
         $scope.$digest();
-        $scope.data.sel = "2";
-        $scope.$digest();
-        $timeout.flush();
+        expect(onSelect2).toHaveBeenCalledWith(jasmine.any(Object), "1");
+        expect(onSelect2.callCount).toEqual(1);
+        onSelect2.reset();
+        $scope.$apply(function() { $scope.data.sel = "2"; });
         expect(onSelect).toHaveBeenCalledWith(jasmine.any(Object), "2");
         expect(onSelect.callCount).toEqual(1);
         expect(onSelect2.callCount).toEqual(0);
-        $scope.data.sel = "1";
-        $scope.$digest();
-        $timeout.flush();
+        $scope.$apply(function() { $scope.data.sel = "1"; });
         expect(onSelect2).toHaveBeenCalledWith(jasmine.any(Object), "1");
         expect(onSelect2.callCount).toEqual(1);
         expect(onSelect.callCount).toEqual(1);
@@ -309,19 +273,17 @@ describe('checkbox', function() {
 
       it('is data-bound with ng-model', function() {
         var $r;
-        $element = $('<div radio-group ng-model="data.sel">' +
+        $element = $('<div radio-group ng-model="data.sel" name="sel">' +
                       '<div radio value="1"></div>' +
                       '<div radio value="2"></div>' +
                      '</div>');
         $element = $compile($element)($scope);
         $scope.$digest();
         $r = $element.find('input');
-        $scope.data.sel = "1";
-        $scope.$digest();
+        $scope.$apply(function() { $scope.data.sel = "1"; });
         expect($r[0].checked).toEqual(true);
         expect($r[1].checked).toEqual(false);
-        $scope.data.sel = "2";
-        $scope.$digest();
+        $scope.$apply(function() { $scope.data.sel = "2"; });
         expect($r[0].checked).toEqual(false);
         expect($r[1].checked).toEqual(true);
       });
@@ -354,15 +316,14 @@ describe('checkbox', function() {
                       '</div>');
         $element = $compile($element)($scope);
         $scope.$digest();
-        $scope.data.sel = "2";
-        $scope.$digest();
-        $timeout.flush();
+        expect(onSelect).toHaveBeenCalledWith(jasmine.any(Object), "1");
+        expect(onSelect.callCount).toEqual(1);
+        $scope.onSelect.reset();
+        $scope.$apply(function() { $scope.data.sel = "2"; });
         expect(onSelect).toHaveBeenCalledWith(jasmine.any(Object), "2");
         expect(onSelect.callCount).toEqual(1);
         $scope.onSelect.reset();
-        $scope.data.sel = "1";
-        $scope.$digest();
-        $timeout.flush();
+        $scope.$apply(function() { $scope.data.sel = "1"; });
         expect(onSelect).toHaveBeenCalledWith(jasmine.any(Object), "1");
         expect(onSelect.callCount).toEqual(1);
       });
@@ -370,24 +331,23 @@ describe('checkbox', function() {
       it('radio on-select event evaluates expr with selected element and value', function() {
         var onSelect = $scope.onSelect = jasmine.createSpy('onSelect'),
             onSelect2 = $scope.onSelect2 = jasmine.createSpy('onSelect2');
-        $element = $('<div radio-group name="test" ' +
+        $element = '<div radio-group name="test" ' +
                       'ng-model="data.sel">' +
                       '<div radio value="1" on-select="onSelect2(selected,value)"></div>' +
                       '<div radio value="2" on-select="onSelect(selected,value)"></div>' +
-                      '</div>');
+                    '</div>';
         $element = $compile($element)($scope);
         $scope.$digest();
-        $scope.data.sel = "2";
-        $scope.$digest();
-        $timeout.flush();
-        expect(onSelect).toHaveBeenCalledWith(jasmine.any(Object), "2");
-        expect(onSelect.callCount).toEqual(1);
-        expect(onSelect2.callCount).toEqual(0);
-        $scope.data.sel = "1";
-        $scope.$digest();
-        $timeout.flush();
         expect(onSelect2).toHaveBeenCalledWith(jasmine.any(Object), "1");
         expect(onSelect2.callCount).toEqual(1);
+        expect(onSelect.callCount).toEqual(0);
+        $scope.$apply(function() { $scope.data.sel = "2"; });
+        expect(onSelect).toHaveBeenCalledWith(jasmine.any(Object), "2");
+        expect(onSelect.callCount).toEqual(1);
+        expect(onSelect2.callCount).toEqual(1);
+        $scope.$apply(function() { $scope.data.sel = "1"; });
+        expect(onSelect2).toHaveBeenCalledWith(jasmine.any(Object), "1");
+        expect(onSelect2.callCount).toEqual(2);
         expect(onSelect.callCount).toEqual(1);
       });
     });

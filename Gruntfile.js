@@ -356,17 +356,17 @@ module.exports = function(grunt) {
       name: name,
       moduleName: enquote('ui.semantic.' + modname),
       displayName: ucwords(breakup(name, ' ')),
-      srcFiles: grunt.file.expand({ignore: "*.spec.js"}, "src/modules/"+name+"/"+name+".js"),
+      srcFiles: grunt.file.expand({ignore: "*.spec.js"}, "src/"+name+"/"+name+".js"),
       tplFiles: grunt.file.expand("template/"+name+"/*.html"),
       tpljsFiles: grunt.file.expand("template/"+name+"/*.html.js"),
       tplModules: grunt.file.expand("template/"+name+"/*.html").map(enquote),
       dependencies: dependenciesForModule(name),
       docs: {
-        md: grunt.file.expand("src/modules/"+name+"/docs/*.md")
+        md: grunt.file.expand("src/"+name+"/docs/*.md")
           .map(grunt.file.read).map(markdown).join("\n"),
-        js: grunt.file.expand("src/modules/"+name+"/docs/*.js")
+        js: grunt.file.expand("src/"+name+"/docs/*.js")
           .map(grunt.file.read).join("\n"),
-        html: grunt.file.expand("src/modules/"+name+"/docs/*.html")
+        html: grunt.file.expand("src/"+name+"/docs/*.html")
           .map(grunt.file.read).join("\n")
       }
     };
@@ -376,7 +376,7 @@ module.exports = function(grunt) {
 
   function dependenciesForModule(name) {
     var deps = [];
-    grunt.file.expand('src/**/*.js')
+    grunt.file.expand(['src/**/*.js', '!src/**/*.spec.js'])
     .map(grunt.file.read)
     .forEach(function(contents) {
       //Strategy: find where module is declared,
@@ -405,7 +405,10 @@ module.exports = function(grunt) {
 
     grunt.file.expand({
       filter: 'isFile', cwd: '.'
-    }, 'src/**/*.js').forEach(function(file) {
+    }, ['src/**/*.js']).forEach(function(file) {
+      if (/\.spec\.js$/.test(file)) {
+        return;
+      }
       findModule(file.split('/')[2].split('.')[0]);
     });
 
