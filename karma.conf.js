@@ -11,7 +11,7 @@ module.exports = function(config) {
       'misc/test/angular.js',
       'misc/test/angular-mocks.js',
       'misc/test/helpers.js',
-      'lib/semantic-ui/build/minified/**/*.min.js',
+      'lib/semantic/build/minified/**/*.min.js',
       'src/**/*.js',
       'template/**/*.js'
     ],
