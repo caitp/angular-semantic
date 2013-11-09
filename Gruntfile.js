@@ -135,6 +135,30 @@ module.exports = function(grunt) {
         files: [{
           src: ['src/**/*.js', '!src/**/*.spec.js']
         }]
+      },
+      tests: {
+        options: {
+          maxlen: false,
+          globals: {
+            "console": true,
+            angular: true,
+            jQuery: true,
+            $: true,
+            document: true,
+            "expect": true,
+            "it": true,
+            "xit": true,
+            "describe": true,
+            "xdescribe": true,
+            "inject": true,
+            "module": true,
+            "beforeEach": true,
+            "jasmine": true
+          }
+        },
+        files: [{
+          src: ['src/**/*.spec.js']
+        }]
       }
     },
     karma: {

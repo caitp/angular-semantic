@@ -108,7 +108,7 @@ describe('checkbox', function() {
         $scope.data.checked = true;
         $element = $compile('<div '+name+' ng-model="data.checked">')($scope);
         $scope.$digest();
-        $element.trigger('click');        
+        $element.trigger('click');
         expect($scope.data.checked).toEqual(false);
         $element.trigger('click');
         expect($scope.data.checked).toEqual(true);
@@ -151,7 +151,7 @@ describe('checkbox', function() {
     describe('radio (element)', function() {
       it('must be the child of a radio-group', function() {
         $element = $('<radio></radio>');
-        expect(angular.bind($scope,$compile($element), $scope)).toThrow();        
+        expect(angular.bind($scope,$compile($element), $scope)).toThrow();
       });
 
       it('must be the child of a radio-group with a model', function() {
