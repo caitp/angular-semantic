@@ -102,18 +102,18 @@ angular.forEach(['checkbox', 'slider', 'toggle'], function(name, _) {
         $input[0].checked = ctrl.$modelValue;
         $input.attr('checked', ctrl.$modelValue);
         var callbacks = {
-            onEnable: attrs.onEnable && $parse(attrs.onEnable),
-            onDisable: attrs.onDisable && $parse(attrs.onDisable),
-            onChange: attrs.onChange && $parse(attrs.onChange)
+          onEnable: attrs.onEnable && $parse(attrs.onEnable),
+          onDisable: attrs.onDisable && $parse(attrs.onDisable),
+          onChange: attrs.onChange && $parse(attrs.onChange)
         };
         ctrl.$parsers.push(updateFn);
         ctrl.$formatters.push(updateFn);
         element.on('click', toggleFn);
 
         function updateFn(value) {
+          var cb = value ? 'onEnable' : 'onDisable';
           $input[0].checked = value;
           $input.attr('checked', value);
-          var cb = value ? 'onEnable' : 'onDisable';
           if (value !== ctrl.$viewValue) {
             if (callbacks.onChange) {
               callbacks.onChange(scope, {checked: ctrl.$viewValue});
@@ -125,9 +125,14 @@ angular.forEach(['checkbox', 'slider', 'toggle'], function(name, _) {
           return value;
         }
 
+        var INPUT = /^input$/i;
         function toggleFn(event) {
+          if (event.target !== element[0] && !INPUT.test(event.target.nodeName)) {
+            return;
+          }
+          var value = !ctrl.$modelValue;
           scope.$apply(function() {
-            ctrl.$setViewValue(!ctrl.$modelValue);
+            ctrl.$setViewValue(value);
           });
         }
       }
@@ -136,7 +141,8 @@ angular.forEach(['checkbox', 'slider', 'toggle'], function(name, _) {
   });
 });
 
-function RadioGroupCtrl($scope, $element, ngModel, onSelect) {
+module
+.controller('RadioGroupCtrl', function RadioGroupCtrl($scope, $element, ngModel, onSelect) {
   var elements = [], active;
   ngModel.$parsers.push(updateFn);
   ngModel.$formatters.push(updateFn);
@@ -193,7 +199,7 @@ function RadioGroupCtrl($scope, $element, ngModel, onSelect) {
     }
     return (active && value) || undefined;
   }
-}
+})
 
 /**
  * @ngdoc directive
@@ -220,7 +226,7 @@ function RadioGroupCtrl($scope, $element, ngModel, onSelect) {
  *     - selected {JQuery element} The selected radio button
  *     - value {*} The selected radio button's model value
  */
-module.directive('radioGroup', function($controller, $parse) {
+.directive('radioGroup', function($controller, $parse) {
   return {
     restrict: 'EA',
     require: '?ngModel',
@@ -243,8 +249,6 @@ module.directive('radioGroup', function($controller, $parse) {
     }
   };
 })
-
-.controller('RadioGroupCtrl', RadioGroupCtrl)
 
 /**
  * @ngdoc directive

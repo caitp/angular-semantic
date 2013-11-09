@@ -43,10 +43,8 @@ describe('checkbox', function() {
         $element = $compile($('<'+name+' ng-model="data.checked">'))($scope);
         $scope.$digest();
         $element.trigger('click');
-        $scope.$digest();
         expect($scope.data.checked).toEqual(false);
         $element.trigger('click');
-        $scope.$digest();
         expect($scope.data.checked).toEqual(true);
       });
 
@@ -106,11 +104,11 @@ describe('checkbox', function() {
         expect($element.find('input').prop('checked')).toEqual(true);
       });
 
-      it('model is toggled when input is clicked', function() {
+      it('model is toggled when clicked', function() {
         $scope.data.checked = true;
-        $element = $compile($('<div '+name+' ng-model="data.checked">'))($scope);
+        $element = $compile('<div '+name+' ng-model="data.checked">')($scope);
         $scope.$digest();
-        $element.trigger('click');
+        $element.trigger('click');        
         expect($scope.data.checked).toEqual(false);
         $element.trigger('click');
         expect($scope.data.checked).toEqual(true);
