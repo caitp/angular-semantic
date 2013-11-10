@@ -110,6 +110,7 @@ module.exports = function(grunt) {
         maxlen: 100,
         trailing: true,
         undef: true,
+        browser: true
       },
       gruntfile: {
         options: {
@@ -127,9 +128,7 @@ module.exports = function(grunt) {
           globals: {
             "console": true,
             angular: true,
-            jQuery: true,
             $: true,
-            document: true
           }
         },
         files: [{
@@ -142,9 +141,7 @@ module.exports = function(grunt) {
           globals: {
             "console": true,
             angular: true,
-            jQuery: true,
             $: true,
-            document: true,
             "expect": true,
             "it": true,
             "xit": true,

@@ -15,6 +15,7 @@
     "tests"
   ],
   "dependencies": {
-    "semantic": "~0.9.1"
+    "semantic": "~0.9.1",
+    "angular-animate": "~1.2.0"
   }
 }
