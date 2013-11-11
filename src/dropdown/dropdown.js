@@ -12,6 +12,7 @@ function DropdownController($scope, $element, $attrs, $injector, $interpolate, $
   this._rootScope = $rootScope;
   this._trigger = $interpolate($attrs.on || 'click', false)($scope);
   this._transition = $interpolate($attrs.transition || 'slide down', false)($scope);
+  this._hidden = true;
   this.event = {
     test: {
       toggle: function(event) {
@@ -86,22 +87,27 @@ DropdownController.prototype = {
     this._rootScope.$emit('$dropdownHideOthers', this);
   },
   show: function(done) {
-    var $current = this._element, $animate = this._animate, self = this;
+    var $current = this._element, $animate = this._animate, self = this,
+        animate = $animate && $animate.enabled() === true && self._transition !== 'none';
     if (typeof done !== 'function') {
       done = function() {};
     }
     function finish() {
-      self._menu.removeClass(self._transition + ' hidden in').addClass('visible');
+      if (animate) {
+        self._menu.removeClass(self._transition + ' in');
+      }
+      self._menu.removeClass('hidden').addClass('visible');
       $current.addClass('visible');
       setTimeout(function() {
         self._document.on('click', self.event.test.hide);
       });
+      self._hidden = false;
       done();
     }
-    if (!self.isVisible(self._menu)) {
+    if (!self.isVisible()) {
       self.hideOthers();
-      if ($animate && $animate.enabled() === true && self._transition !== 'none') {
-        $current.addClass('active');
+      $current.addClass('active');
+      if (animate) {
         $animate.addClass(self._menu, self._transition + ' visible transition in', finish);
       } else {
         finish();
@@ -109,7 +115,8 @@ DropdownController.prototype = {
     }
   },
   hide: function(done) {
-    var $current = this._element, $animate = this._animate, self = this;
+    var $current = this._element, $animate = this._animate, self = this,
+        animate = $animate && $animate.enabled() === true && self._transition !== 'none';
     if (typeof done !== 'function') {
       done = function() {};
     }
@@ -119,11 +126,12 @@ DropdownController.prototype = {
       setTimeout(function() {
         self._document.off('click', self.event.test.hide);
       });
+      self._hidden = true;
       done();
     }
-    if (self.isVisible(self._menu)) {
+    if (self.isVisible()) {
       $current.removeClass('active');
-      if ($animate && $animate.enabled() === true && self._transition !== 'none') {
+      if (animate) {
         $animate.addClass(self._menu, self._transition + ' transition out', finish);
       } else {
         finish();
@@ -135,9 +143,8 @@ DropdownController.prototype = {
   determineIntent: function(event, callback) {
     callback = callback || angular.noop;
   },
-  isVisible: function(element) {
-    element = element || this._element;
-    return element && (element[0].offsetHeight || element[0].offsetWidth);
+  isVisible: function() {
+    return !this._hidden;
   }
 };
 
