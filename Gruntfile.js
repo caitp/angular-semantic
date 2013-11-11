@@ -150,7 +150,11 @@ module.exports = function(grunt) {
             "inject": true,
             "module": true,
             "beforeEach": true,
-            "jasmine": true
+            "afterEach": true,
+            "jasmine": true,
+            "spyOn": true,
+            "waitsFor": true,
+            "runs": true
           }
         },
         files: [{
