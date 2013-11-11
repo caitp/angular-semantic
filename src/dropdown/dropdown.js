@@ -13,6 +13,7 @@ function DropdownController($scope, $element, $attrs, $injector, $interpolate, $
   this._trigger = $interpolate($attrs.on || 'click', false)($scope);
   this._transition = $interpolate($attrs.transition || 'slide down', false)($scope);
   this._hidden = true;
+  this._transitioning = false;
   this.event = {
     test: {
       toggle: function(event) {
@@ -26,6 +27,8 @@ function DropdownController($scope, $element, $attrs, $injector, $interpolate, $
         
       },
       hide: function(event) {
+        event.preventDefault();
+        event.stopPropagation();
         self.hide();
       }
     },
@@ -94,7 +97,7 @@ DropdownController.prototype = {
     }
     function finish() {
       if (animate) {
-        self._menu.removeClass(self._transition + ' in');
+        self._menu.removeClass(self._transition + ' transition in');
       }
       self._menu.removeClass('hidden').addClass('visible');
       $current.addClass('visible');
@@ -102,9 +105,11 @@ DropdownController.prototype = {
         self._document.on('click', self.event.test.hide);
       });
       self._hidden = false;
+      self._transitioning = false;
       done();
     }
-    if (!self.isVisible()) {
+    if (!self.isVisible() && !self._transitioning) {
+      self._transitioning = true;
       self.hideOthers();
       $current.addClass('active');
       if (animate) {
@@ -121,15 +126,17 @@ DropdownController.prototype = {
       done = function() {};
     }
     function finish() {
-      self._menu.removeClass(self._transition + ' out visible').addClass('hidden');
+      self._menu.removeClass(self._transition + ' transition out visible').addClass('hidden');
       $current.removeClass('visible');
       setTimeout(function() {
         self._document.off('click', self.event.test.hide);
       });
       self._hidden = true;
+      self._transitioning = false;
       done();
     }
-    if (self.isVisible()) {
+    if (self.isVisible() && !self._transitioning) {
+      self._transitioning = true;
       $current.removeClass('active');
       if (animate) {
         $animate.addClass(self._menu, self._transition + ' transition out', finish);
