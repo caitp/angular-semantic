@@ -125,11 +125,7 @@ angular.forEach(['checkbox', 'slider', 'toggle'], function(name, _) {
           return value;
         }
 
-        var INPUT = /^input$/i;
         function toggleFn(event) {
-          if (event.target !== element[0] && !INPUT.test(event.target.nodeName)) {
-            return;
-          }
           var value = !ctrl.$modelValue;
           scope.$apply(function() {
             ctrl.$setViewValue(value);
