@@ -185,7 +185,7 @@ angular.module('ui.semantic.dropdown', [])
 
 .controller('DropdownController', dropdownController)
 .controller('DropdownMenuController', dropdownMenuController)
-.directive('dropdown', function($controller) {
+.directive('dropdown', function() {
   return {
     restrict: 'EA',
     template: '<div class="ui dropdown"></div>',
