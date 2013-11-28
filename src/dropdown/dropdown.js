@@ -185,45 +185,23 @@ angular.module('ui.semantic.dropdown', [])
 
 .controller('DropdownController', dropdownController)
 .controller('DropdownMenuController', dropdownMenuController)
-.directive('dropdown', function($compile, $controller) {
+.directive('dropdown', function($controller) {
   return {
     restrict: 'EA',
     template: '<div class="ui dropdown"></div>',
     replace: true,
     transclude: true,
-    compile: function($element, $attr, $transclude) {
-      var $trigger, $items, $menus, $menu, ctrl, unlisten = {}, $link = {
-        pre: function(scope, element, attr) {
-          element.data('$dropdownController', ctrl = $controller('DropdownController', {
-            '$scope': scope,
-            '$element': element,
-            '$attrs': attr
-          }));
-          var children = $transclude(scope);
-          children.removeClass('ng-scope');
-          angular.forEach(children, function(node) {
-            var menu = angular.element(node).controller('dropdownMenu');
-            if (menu) {
-              menu.addToDropdown(ctrl);
-            }
-          });
-          element.append(children);
-        },
-        post: function(scope, element, attr) {
-          function parentsWithClass(node, className) {
-            var parents = [];
-            node = angular.element(node);
-            while (node[0] !== document) {
-              if (node.hasClass(className)) {
-                parents.push(node);
-              }
-              node = node.parent();
-            }
-            return parents;
-          }
-        }
+    controller: 'DropdownController',
+    compile: function(element, attr, $transclude) {
+      return function(scope, element, attr, ctrl) {
+        $transclude(scope, function(dom) {
+          element.append(dom);
+        });
+        element.removeClass('ng-scope');
+        angular.forEach(element.children(), function(element) {
+          angular.element(element).removeClass('ng-scope');
+        });
       };
-      return $link;
     }
   };
 })
@@ -232,24 +210,21 @@ angular.module('ui.semantic.dropdown', [])
   return {
     restrict: 'EA',
     template: '<div class="ui menu hidden"></div>',
-    require: ['?^dropdown', 'dropdownMenu'],
+    require: ['^dropdown', 'dropdownMenu'],
     replace: true,
     transclude: true,
     controller: 'DropdownMenuController',
-    compile: function($element, $attrs, $transclude) {
-      var $link = {
-        pre: function(scope, element, attr, ctrls) {
-          var children = $transclude(scope);
-          children.removeClass('ng-scope');
-          element.append(children);
-          if (ctrls[0]) {
-            ctrls[0].addMenu(ctrls[1]);
-          }
-        },
-        post: function(scope, element, attr) {
-        }
+    compile: function(element, attr, $transclude) {
+      return function(scope, element, attr, ctrls) {
+        ctrls[0].addMenu(ctrls[1]);
+        attr.$removeClass('ng-scope');
+        $transclude(scope, function(dom) {
+          element.append(dom);
+        });
+        angular.forEach(element.children(), function(element) {
+          angular.element(element).removeClass('ng-scope');
+        });
       };
-      return $link;
     }
   };
 })
@@ -257,7 +232,13 @@ angular.module('ui.semantic.dropdown', [])
 .directive('dropdownItem', function() {
   return {
     restrict: 'EA',
-    template: '<div class="item"></div>'
+    template: '<div class="item"></div>',
+    link: function(scope, element, attr) {
+      element.removeClass('ng-scope');
+      angular.forEach(element.children(), function(element) {
+        angular.element(element).removeClass('ng-scope');
+      });
+    }
   };
 });
 
