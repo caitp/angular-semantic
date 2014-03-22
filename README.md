@@ -32,4 +32,4 @@ Any form of contribution is welcome, whether it be a bug report, a feature reque
 
 Patches should follow the [Google JavaScript Style Guide](http://google-styleguide.googlecode.com/svn/trunk/javascriptguide.xml), and each and every new feature or bug fix should incorporate one or more meaningful tests to assist in preventing future regressions.
 
-While you may, if you so wish, discuss this module anywhere you like, I will be most likely to respond to inquiries directed to me on IRC (particularly in #angularjs on irc.freenode.net), or on the [issue tracker](https://github.com/caitp/angular-drop/issues).
+While you may, if you so wish, discuss this module anywhere you like, I will be most likely to respond to inquiries directed to me on IRC (particularly in #angularjs on irc.freenode.net), or on the [issue tracker](https://github.com/caitp/angular-semantic/issues).
