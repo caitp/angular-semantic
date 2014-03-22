@@ -9,7 +9,7 @@
   "author": "Caitlin Potter <snowball@defpixel.com>",
   "license": "MIT",
   "devDependencies": {
-    "karma": "~0.11.0",
+    "karma": "~0.12.0",
     "grunt": "~0.4.1",
     "grunt-ngdocs-caitp": "~0.1.8",
     "grunt-conventional-changelog": "~1.1.0",
