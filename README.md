@@ -1,4 +1,4 @@
-##AngularSemantic [![Build Status](https://travis-ci.org/caitp/angular-semantic.png?branch=master)](https://travis-ci.org/caitp/angular-semantic) [![devDependency Status](https://david-dm.org/caitp/angular-semantic/dev-status.png?branch=master)](https://david-dm.org/caitp/angular-semantic#info=devDependencies)
+##AngularSemantic [![Build Status](https://travis-ci.org/caitp/angular-semantic.svg?branch=master)](https://travis-ci.org/caitp/angular-semantic) [![devDependency Status](https://david-dm.org/caitp/angular-semantic/dev-status.png?branch=master)](https://david-dm.org/caitp/angular-semantic#info=devDependencies)
 
 [Docs](http://caitp.github.io/angular-semantic/docs)
 
