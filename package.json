@@ -17,7 +17,7 @@
     "grunt-contrib-copy": "~0.5.0",
     "grunt-contrib-uglify": "~0.4.0",
     "grunt-contrib-watch": "~0.5.3",
-    "grunt-contrib-jshint": "~0.8.0",
+    "grunt-contrib-jshint": "~0.10.0",
     "grunt-html2js": "~0.2.1",
     "grunt-karma": "~0.7.0",
     "node-markdown": "~0.1.1",
