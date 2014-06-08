@@ -7,9 +7,9 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'misc/test/jquery.js',
-      'misc/test/angular.js',
-      'misc/test/angular-mocks.js',
+      'lib/jquery/dist/jquery.min.js',
+      'lib/angular/angular.min.js',
+      'lib/angular-mocks/angular-mocks.js',
       'misc/test/helpers.js',
       'src/**/*.js',
       'template/**/*.js'
@@ -51,6 +51,12 @@ module.exports = function(config) {
 
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit
-    singleRun: false
+    singleRun: false,
+
+    plugins: [
+        'karma-phantomjs-launcher',
+        'karma-chrome-launcher',
+        'karma-jasmine'
+    ]
   });
 }
