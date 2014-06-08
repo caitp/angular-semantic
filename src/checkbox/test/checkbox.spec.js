@@ -72,10 +72,10 @@ describe('checkbox', function() {
           $element = $compile('<'+name+' ng-model="data" ' + attr + '="'+cb+'(checked)"></'+
                               name+'>')($scope);
           $scope.$digest();
-          callback.reset();
+          callback.calls.reset();
           $scope.$apply(function() { $scope.data = !startWith; });
           expect(callback).toHaveBeenCalledWith(expected);
-          expect(callback.callCount).toEqual(1);
+          expect(callback.calls.count()).toEqual(1);
         });
       });
     });
@@ -138,10 +138,10 @@ describe('checkbox', function() {
           $element = $compile($('<div '+name+' ng-model="data" ' + attr + '="'+cb+'(checked)">'+
                               '</div>'))($scope);
           $scope.$digest();
-          callback.reset();
+          callback.calls.reset();
           $scope.$apply(function() { $scope.data = !startWith; });
           expect($scope[cb]).toHaveBeenCalledWith(expected);
-          expect($scope[cb].callCount).toEqual(1);
+          expect($scope[cb].calls.count()).toEqual(1);
         });
       });
     });
@@ -214,15 +214,15 @@ describe('checkbox', function() {
         $element = $compile($element)($scope);
         $scope.$digest();
         expect(onSelect).toHaveBeenCalledWith(jasmine.any(Object), "1");
-        expect(onSelect.callCount).toEqual(1);
-        onSelect.reset();
+        expect(onSelect.calls.count()).toEqual(1);
+        onSelect.calls.reset();
         $scope.$apply(function() { $scope.data.sel = "2"; });
         expect(onSelect).toHaveBeenCalledWith(jasmine.any(Object), "2");
-        expect(onSelect.callCount).toEqual(1);
-        $scope.onSelect.reset();
+        expect(onSelect.calls.count()).toEqual(1);
+        $scope.onSelect.calls.reset();
         $scope.$apply(function() { $scope.data.sel = "1"; });
         expect(onSelect).toHaveBeenCalledWith(jasmine.any(Object), "1");
-        expect(onSelect.callCount).toEqual(1);
+        expect(onSelect.calls.count()).toEqual(1);
       });
 
       it('radio on-select event evaluates expr with selected element and value', function() {
@@ -236,16 +236,16 @@ describe('checkbox', function() {
         $element = $compile($element)($scope);
         $scope.$digest();
         expect(onSelect2).toHaveBeenCalledWith(jasmine.any(Object), "1");
-        expect(onSelect2.callCount).toEqual(1);
-        onSelect2.reset();
+        expect(onSelect2.calls.count()).toEqual(1);
+        onSelect2.calls.reset();
         $scope.$apply(function() { $scope.data.sel = "2"; });
         expect(onSelect).toHaveBeenCalledWith(jasmine.any(Object), "2");
-        expect(onSelect.callCount).toEqual(1);
-        expect(onSelect2.callCount).toEqual(0);
+        expect(onSelect.calls.count()).toEqual(1);
+        expect(onSelect2.calls.count()).toEqual(0);
         $scope.$apply(function() { $scope.data.sel = "1"; });
         expect(onSelect2).toHaveBeenCalledWith(jasmine.any(Object), "1");
-        expect(onSelect2.callCount).toEqual(1);
-        expect(onSelect.callCount).toEqual(1);
+        expect(onSelect2.calls.count()).toEqual(1);
+        expect(onSelect.calls.count()).toEqual(1);
       });
     });
 
@@ -315,15 +315,15 @@ describe('checkbox', function() {
         $element = $compile($element)($scope);
         $scope.$digest();
         expect(onSelect).toHaveBeenCalledWith(jasmine.any(Object), "1");
-        expect(onSelect.callCount).toEqual(1);
-        $scope.onSelect.reset();
+        expect(onSelect.calls.count()).toEqual(1);
+        $scope.onSelect.calls.reset();
         $scope.$apply(function() { $scope.data.sel = "2"; });
         expect(onSelect).toHaveBeenCalledWith(jasmine.any(Object), "2");
-        expect(onSelect.callCount).toEqual(1);
-        $scope.onSelect.reset();
+        expect(onSelect.calls.count()).toEqual(1);
+        $scope.onSelect.calls.reset();
         $scope.$apply(function() { $scope.data.sel = "1"; });
         expect(onSelect).toHaveBeenCalledWith(jasmine.any(Object), "1");
-        expect(onSelect.callCount).toEqual(1);
+        expect(onSelect.calls.count()).toEqual(1);
       });
 
       it('radio on-select event evaluates expr with selected element and value', function() {
@@ -337,16 +337,16 @@ describe('checkbox', function() {
         $element = $compile($element)($scope);
         $scope.$digest();
         expect(onSelect2).toHaveBeenCalledWith(jasmine.any(Object), "1");
-        expect(onSelect2.callCount).toEqual(1);
-        expect(onSelect.callCount).toEqual(0);
+        expect(onSelect2.calls.count()).toEqual(1);
+        expect(onSelect.calls.count()).toEqual(0);
         $scope.$apply(function() { $scope.data.sel = "2"; });
         expect(onSelect).toHaveBeenCalledWith(jasmine.any(Object), "2");
-        expect(onSelect.callCount).toEqual(1);
-        expect(onSelect2.callCount).toEqual(1);
+        expect(onSelect.calls.count()).toEqual(1);
+        expect(onSelect2.calls.count()).toEqual(1);
         $scope.$apply(function() { $scope.data.sel = "1"; });
         expect(onSelect2).toHaveBeenCalledWith(jasmine.any(Object), "1");
-        expect(onSelect2.callCount).toEqual(2);
-        expect(onSelect.callCount).toEqual(1);
+        expect(onSelect2.calls.count()).toEqual(2);
+        expect(onSelect.calls.count()).toEqual(1);
       });
     });
   });
