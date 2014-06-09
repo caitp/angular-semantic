@@ -7,5 +7,6 @@ before_script:
   - sh -e /etc/init.d/xvfb start
   - npm install --silent -g grunt-cli
   - npm install --dev --silent
+  - npm install --silent karma-firefox-launcher karma-phantomjs-launcher
 
 script: grunt
