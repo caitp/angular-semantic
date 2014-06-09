@@ -26,6 +26,15 @@ $ npm install --dev
 $ grunt
 ```
 
+###Testing
+
+Testing locally, by default, uses the Chrome browser. However, it is necessary to install the Karma Chrome launcher before making use of it.
+To do this, run `grunt setup --launchers chrome` to install it, as a convenience. You can also install other launchers this way, such as
+`grunt setup --launchers "firefox, phantomjs, chrome"`.
+
+To run tests, simply run `grunt test`. Currently, testing with alternative browsers requires either changes to the Gruntfile, or else changes
+to karma.conf.js. This will be improved in the near future.
+
 ###Contribution
 
 Any form of contribution is welcome, whether it be a bug report, a feature request, a feature implementation, a bug fix, or even an example usage or additional test. The contribution is welcome and appreciated.
