@@ -461,5 +461,50 @@ module.exports = function(grunt) {
     grunt.task.mark().run('gh-pages');
   });
 
+  grunt.registerTask('setup', function() {
+    var done = this.async();
+    var launchers = grunt.option('launchers');
+    var commands = [];
+    var complete = 0;
+
+    if (launchers) {
+      launchers = launchers.split(',').map(function(launcher) {
+        launcher = launcher.
+          replace(/^\s+/, '').
+          replace(/\s+$/, '');
+        if (launcher.match(/^karma-([a-z\d]+([\w\d-]*[a-z\d])?)-launcher$/i)) {
+          return launcher;
+        } else if (launcher.match(/^[a-z\d]+([\w\d-]*[a-z\d])?$/i)) {
+          return "karma-" + launcher + "-launcher";
+        } else {
+          return "";
+        }
+      }).filter(function(launcher) {
+        return launcher.length > 0;
+      });
+      commands.push(['npm', ['install'].concat(launchers)]);
+    }
+
+    if (!commands.length) {
+      return done();
+    }
+
+    commands.forEach(function(cmd) {
+      var opts = {
+        cmd: cmd[0],
+        args: cmd[1] || [],
+        opts: {
+          stdio: [ 'ignore', grunt.option('verbose') ? process.stdout : 'ignore', process.stderr ],
+          cwd: process.cwd()
+        }
+      };
+      grunt.util.spawn(opts, function(err) {
+        if (++complete >= commands.length) {
+          done();
+        }
+      });
+    });
+  });
+
   return grunt;
 };
