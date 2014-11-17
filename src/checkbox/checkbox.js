@@ -1,5 +1,9 @@
 (function() {
 
+/**
+ * @ngdoc module
+ * @name checkbox
+ */
 var module = angular.module('ui.semantic.checkbox', []);
 
 /**
@@ -86,7 +90,7 @@ var module = angular.module('ui.semantic.checkbox', []);
 angular.forEach(['checkbox', 'slider', 'toggle'], function(name, _) {
   var needCheckbox = name !== 'checkbox' ? 'checkbox ' : '',
       inputType = name !== 'radio' ? 'checkbox' : 'radio';
-      
+
   module.directive(name, function($compile, $parse) {
     var directive = {
       restrict: 'EA',
@@ -265,7 +269,7 @@ module
  *
  * **Events**
  *
- *   - onSelect(selected, value) 
+ *   - onSelect(selected, value)
  *     - selected {JQuery element} The selected radio button
  *     - value {*} The selected radio button's model value
  *
