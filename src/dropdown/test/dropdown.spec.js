@@ -18,25 +18,27 @@ describe('dropdown', function() {
     $scope.$digest();
     var $dropdown = $element.children().eq(0),
         ctrl = $dropdown.controller('dropdown');
-    spyOn(ctrl, 'show').andCallThrough();
+    spyOn(ctrl, 'show').and.callThrough();
     $dropdown.trigger('click');
     expect(ctrl.show).toHaveBeenCalled();
   });
 
 
-  it('should hide on document click', function() {
+  it('should hide on document click', function(done) {
     var i = 0;
     $element = $compile('<div><div dropdown><div dropdown-menu></div></div></div>')($scope);
     $scope.$digest();
     var $dropdown = $element.children().eq(0),
         ctrl = $dropdown.controller('dropdown');
     ctrl.show();
-    spyOn(ctrl, 'hide').andCallThrough();
-    waitsFor(function() { return i++ === 1; });
-    runs(function() {
-      ctrl._document.trigger('click');
-      expect(ctrl.hide).toHaveBeenCalled();
-    });
+    spyOn(ctrl, 'hide').and.callThrough();
+    when(function() { return i++ === 1; }, 500).
+      then(function() {
+        ctrl._document.trigger('click');
+        expect(ctrl.hide).toHaveBeenCalled();
+        done();
+      }).
+      catch(function(e) { done(e); });
   });
 
 
@@ -47,12 +49,14 @@ describe('dropdown', function() {
     var $dropdown = $element.children().eq(0),
         ctrl = $dropdown.controller('dropdown');
     ctrl.show();
-    spyOn(ctrl, 'hide').andCallThrough();
-    waitsFor(function() { return i++ === 1; });
-    runs(function() {
-      $dropdown.trigger('click');
-      expect(ctrl.hide).toHaveBeenCalled();
-    });
+    spyOn(ctrl, 'hide').and.callThrough();
+    when(function() { return i++ === 1; }, 500).
+      then(function() {
+        $dropdown.trigger('click');
+        expect(ctrl.hide).toHaveBeenCalled();
+        done();
+      }).
+      catch(function(e) { done(e); });
   });
 
   it('should hide other dropdowns when opening', function() {
@@ -63,13 +67,13 @@ describe('dropdown', function() {
         $dropdown2 = $element.children().eq(1),
         ctrl1 = $dropdown1.controller('dropdown'),
         ctrl2 = $dropdown2.controller('dropdown');
-    spyOn(ctrl1, 'hide').andCallThrough();
-    spyOn(ctrl2, 'hide').andCallThrough();
+    spyOn(ctrl1, 'hide').and.callThrough();
+    spyOn(ctrl2, 'hide').and.callThrough();
     ctrl1.show();
-    ctrl1.hide.reset();
+    ctrl1.hide.calls.reset();
     ctrl2.show();
     expect(ctrl1.hide).toHaveBeenCalled();
-    ctrl2.hide.reset();
+    ctrl2.hide.calls.reset();
     ctrl1.show();
     expect(ctrl2.hide).toHaveBeenCalled();
   });

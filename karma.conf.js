@@ -10,6 +10,7 @@ module.exports = function(config) {
       'misc/test/jquery.js',
       'misc/test/angular.js',
       'misc/test/angular-mocks.js',
+      'misc/test/third_party/bluebird/index.js',
       'misc/test/helpers.js',
       'src/**/*.js',
       'template/**/*.js'
