@@ -42,7 +42,7 @@ describe('dropdown', function() {
   });
 
 
-  it('should hide on self click', function() {
+  it('should hide on self click', function(done) {
     var i = 0;
     $element = $compile('<div><div dropdown><div dropdown-menu></div></div></div>')($scope);
     $scope.$digest();

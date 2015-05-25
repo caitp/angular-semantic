@@ -142,7 +142,8 @@ module.exports = function(grunt) {
             "jasmine": true,
             "spyOn": true,
             "waitsFor": true,
-            "runs": true
+            "runs": true,
+            "when": true
           }
         },
         files: [{
